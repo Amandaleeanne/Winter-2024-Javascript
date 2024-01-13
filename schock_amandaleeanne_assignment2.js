@@ -20,5 +20,3 @@ if  (!isNaN(input)) {
     }  
 }
 console.log(input + ' is the same as ' + output);
-
-//output = output.split('').reverse().join('')
