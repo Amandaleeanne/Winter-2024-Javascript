@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .favorites {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .favorite-box {
+    width: 120px;
+    margin: 10px;
+    text-align: center;
+  }
+  
+  .todo-list {
+    width: 100%;
+  }
+  
+  #taskList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .crossed-off {
+    text-decoration: line-through;
+  }
+  

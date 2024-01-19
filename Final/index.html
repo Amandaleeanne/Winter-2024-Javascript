@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<table id="board"></table>
+
+<script>
+    const boardSize = 3;
+    const players = ['X', 'O'];
+    let currentPlayer = 0;
+    let board = createBoard();
+
+    function createBoard() {
+        const newBoard = [];
+        for (let i = 0; i < boardSize; i++) {
+            const row = [];
+            for (let j = 0; j < boardSize; j++) {
+                row.push('');
+            }
+            newBoard.push(row);
+        }
+        return newBoard;
+    }
+
+    function renderBoard() {
+        const table = document.getElementById('board');
+        table.innerHTML = '';
+
+        for (let i = 0; i < boardSize; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < boardSize; j++) {
+                const cell = document.createElement('td');
+                cell.textContent = board[i][j];
+                cell.addEventListener('click', () => makeMove(i, j));
+                row.appendChild(cell);
+            }
+            table.appendChild(row);
+        }
+    }
+
+    function makeMove(row, col) {
+        if (board[row][col] === '' && !isGameOver()) {
+            board[row][col] = players[currentPlayer];
+            renderBoard();
+
+            if (checkWinner()) {
+                alert(`${players[currentPlayer]} wins!`);
+                resetGame();
+            } else if (isBoardFull()) {
+                alert("It's a tie!");
+                resetGame();
+            } else {
+                currentPlayer = 1 - currentPlayer; // Switch player
+                if (currentPlayer === 1) {
+                    makeAIMove();
+                }
+            }
+        }
+    }
+
+    function makeAIMove() {
+        const shouldMessUp = Math.random() < 0.2; // 20% chance of messing up
+        const bestMove = shouldMessUp ? getRandomMove() : getBestMove();
+        makeMove(bestMove.row, bestMove.col);
+    }
+
+    function getRandomMove() {
+        const emptyCells = getEmptyCells();
+        return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    }
+
+    function getBestMove() {
+        let bestScore = -Infinity;
+        let bestMove;
+
+        const emptyCells = getEmptyCells();
+
+        for (const [row, col] of emptyCells) {
+            board[row][col] = players[1]; // Simulate the AI's move
+            const score = minimax(board, 0, false);
+            board[row][col] = ''; // Undo the move
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = { row, col };
+            }
+        }
+
+        return bestMove;
+    }
+
+    function minimax(board, depth, isMaximizing) {
+        if (checkWinner()) {
+            return isMaximizing ? -1 : 1;
+        }
+        if (isBoardFull()) {
+            return 0;
+        }
+
+        const playerIndex = isMaximizing ? 1 : 0;
+        let bestScore = isMaximizing ? -Infinity : Infinity;
+
+        const emptyCells = getEmptyCells();
+
+        for (const [row, col] of emptyCells) {
+            board[row][col] = players[playerIndex]; // Make the move
+            const score = minimax(board, depth + 1, !isMaximizing);
+            board[row][col] = ''; // Undo the move
+
+            bestScore = isMaximizing ? Math.max(bestScore, score) : Math.min(bestScore, score);
+        }
+
+        return bestScore;
+    }
+
+    function getEmptyCells() {
+        const emptyCells = [];
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (board[i][j] === '') {
+                    emptyCells.push([i, j]);
+                }
+            }
+        }
+        return emptyCells;
+    }
+
+    function isBoardFull() {
+        return board.every(row => row.every(cell => cell !== ''));
+    }
+
+    function checkWinner() {
+        // Check rows, columns, and diagonals for a win
+        for (let i = 0; i < boardSize; i++) {
+            if (checkLine(board[i]) || checkLine(board.map(row => row[i]))) {
+                return true;
+            }
+        }
+        if (checkLine(board.map((row, index) => row[index])) || checkLine(board.map((row, index) => row[boardSize - index - 1]))) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkLine(line) {
+        return line.every(cell => cell === line[0] && cell !== '');
+    }
+
+    function isGameOver() {
+        return checkWinner() || isBoardFull();
+    }
+
+    function resetGame() {
+        board = createBoard();
+        currentPlayer = 0;
+        renderBoard();
+    }
+
+    // Initial rendering
+    renderBoard();
+</script>
+
+</body>
+</html>
