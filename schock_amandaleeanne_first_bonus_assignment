@@ -1,0 +1,39 @@
+
+//I wanted to make this code flexible so it could be any time
+//on the easy or medium run
+
+//I utilized objects instead of indivisual varibules so its easier to read, 
+//and less annoying to implement
+let time ={
+    hours: 6,
+    minutes: 52,
+    seconds: 0
+};
+let runEasy = {
+    minutesPerMile: 8,
+    secondsPerMile: 15,
+    totalMiles: 2
+};
+let runMedium = {
+    minutesPerMile:7,
+    secondsPerMile: 12,
+    totalMiles: 3
+};
+
+
+let totalMinutes = (runEasy.minutesPerMile*runEasy.totalMiles) + (runMedium.minutesPerMile *runMedium.totalMiles);
+let totalSeconds = (runEasy.secondsPerMile *runEasy.totalMiles) + (runMedium.secondsPerMile *runMedium.totalMiles);
+
+if (totalSeconds > 60){
+    totalMinutes ++;
+    totalSeconds %= 60;
+}
+
+if (time.minutes + totalMinutes >= 60){
+    time.minutes = (time.minutes + totalMinutes) % 60;
+    time.hours++;
+}else{
+    time.minutes = time.minutes + totalMinutes;
+}
+
+console.log(`Time you arrived at home is: ${time.hours}: ${time.minutes} am`);
