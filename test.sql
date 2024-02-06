@@ -1,0 +1,11 @@
+-- ********************Problem 7*****************************
+-- * Write a SQL statement that answers this question: Which product was purchased by more than one customer
+-- * Product_name
+-- * Number_of_orders_items  - number of order line items that purchased per product
+-- * Number_of_distinct_customers – number of distinct customers purchased the product
+-- * HINTS
+-- * You will need to join 4 tables
+-- * To count order items, count the number of item_id in the order_items table
+-- * Don’t forget to do a group by, figuring out correct group by column is important
+-- * Specify a having clause where the number_of_distinct_customers is greater than 1
+-- ***********************************************************
