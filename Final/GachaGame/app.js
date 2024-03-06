@@ -7,7 +7,7 @@
 let timeLeft = 30;
 let coins = 30;
 let highscores = [];
-//Gacha handling:
+//Gacha handling
 const GachaJS = require('gacha-js');
 let rates = {
     ssr: 5.9,
