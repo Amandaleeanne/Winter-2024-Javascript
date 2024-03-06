@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gacha Type!</title>
+<link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+<div id="game-container">
+  <div id="game-screen">
+    <div id="gacha-ball"></div>
+    <div id="timer">Time Left: <span id="time-left">30</span> seconds</div>
+    <button id="start-button">Start Game</button>
+  </div>
+  <div id="shop">
+    <h2>Shop</h2>
+    <p>Coins: <span id="coins">0</span></p>
+    <button id="buy-chance">Buy Chance (+1%) - 10 Coins</button>
+    <button id="buy-speed">Buy More Time (-100ms) - 20 Coins</button>
+  </div>
+  <div id="highscore-board">
+    <h2>Highscore Board</h2>
+    <ol id="highscores"></ol>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

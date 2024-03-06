@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Song Search</title>
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Songify</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Search</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form onsubmit="event.preventDefault(); searchSongs(this.querySelector('input').value)">
+            <input type="text" placeholder="Search for songs..">
+            <button type="submit"><img src="imgs/Vector.png" alt="search icon"></button>
+        </form>
+        
+            <div class="scrollable-container">
+                <!-- List items are temporary (except for top) to get the feel of HTML, list will be populated by JS-->
+                <li id = 'descriptorLi'><p>Song Name</p><p>Artist</p><p>Alblum</p><p>Add to Favorites</p></li>
+                <ul>
+                    
+                    
+                    <!--Code underneath here is what JS will delete and populate
+                    with the format: <li><p>" Song name here"</p><p>"Artist here"</p><p>"Alblum here"</p><button type="button">Add to Favorites</button></li>-->
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <li><p>Song Name</p><p>Artist</p><p>Alblum</p><button type="button">Add to Favorites</button></li>
+                    <!--end JS code population-->
+                </ul>
+            </div>
+
+        
+    </main>
+</body>
+</html>
