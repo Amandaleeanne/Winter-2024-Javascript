@@ -1,0 +1,124 @@
+/*Global Styles*/
+
+body{
+  background: #6C77CE;
+  height: 97vh;
+  display: flex;
+  flex-direction: column;
+}
+  header{
+    padding: 0em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    background: #D9D9D9;
+    filter: drop-shadow(0px 4px 4px #3C569C);
+  }
+    nav ul{
+      display: flex;
+    }
+      li{
+        margin: 1em;
+        padding:0.5em;
+        list-style: none;
+        border-radius: 20px;
+        background: #BC3D8A;
+      }
+        li a {
+          margin: 0.5em;
+          color: #EBEDE1;
+          text-decoration: none;
+        }
+        a:visited{
+          color: #EBEDE1;
+        }
+    h1 {
+      align-self: flex-start;
+      background: linear-gradient(180deg, #929BE2 19.5%, #BC3D8A 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      padding-inline-start: 40px;
+    }
+      /*Container*/
+      /*Scrolling Container*/
+      .scrollable-container{
+        margin: 1em;
+        border-radius: 15px;
+        background: #D9D9D9;
+        
+        overflow: hidden auto;
+      }
+        .scrollable-container::-webkit-scrollbar {
+          margin-top: 20px;
+          width: 0.7em;
+  
+          background-color:#3C569C;
+          border-radius: 20px;
+          max-height: 80%;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+          height: 100px;
+          background: #BC3D8A;
+          border-radius: 10px;
+        }
+        .scrollable-container ul{
+          padding: 0px 30px;
+        }
+        .scrollable-container li{
+          margin: 0.5em 1em;
+          background-color: rgba(250, 235, 215, 0.507);
+          display: flex;
+          justify-content: space-around;
+          border-bottom: black solid 0.05em;
+        }
+        .scrollable-container li#descriptorLi{
+          position: sticky;
+          background: none;
+          border-radius: 0px;
+        }
+        .scrollable-container button{
+          border-radius: 20px;
+          margin: 0 68.900px;
+        }
+        .scrollable-container p{
+          margin: 0.5em auto;
+        }
+        .scrollable-container li.line{
+          border-radius: 10%;
+          padding: 0.02em;
+          background-color: black;
+        }
+  #game-screen{
+    margin: 1em;
+    text-align: center;
+    font-size: 3em;
+    height: 30%;
+  }
+  #extras{
+    text-align: center;
+    display: flex;
+  }
+  #extras div{
+    width: 50%;
+    background-color: #EBEDE1;
+    margin: 1em;
+        border-radius: 15px;
+  }
+#game-container{
+  margin: 0;
+}
+button{
+  margin: 1em;
+        padding:0.8em 1em;
+        list-style: none;
+        border-radius: 20px;
+        background: #BC3D8A;
+        border: none;
+        color: #EBEDE1
+}

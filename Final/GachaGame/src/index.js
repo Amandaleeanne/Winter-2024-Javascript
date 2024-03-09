@@ -1,19 +1,21 @@
 // Importing required libraries and modules
 const GachaJS = require('gacha-js');
-import { keyDown } from 'utils.js';
+import { updateUICoins, generateWord, updateUITimeLeft, getDictionaryInfo, submitWord, clearTypedWord } from './utils.js';
+//import {  } from './shop.js';
 // Global variables initialization
 let timeLeft = 30;
 let timeAdded = 0;
-let coins = 3000;
+let coins = 0;
 let highscores = [];
 let score = 0;
 let word;
+
 let sequence = [];
 let varGachaPull;
 
 // Updating UI with initial values
-document.getElementById('coins').innerText = coins;
-document.getElementById('time-left').innerText = timeLeft;
+updateUICoins(coins);
+updateUITimeLeft(timeLeft);
 
 // Gacha rates configuration
 let rates = {
@@ -27,7 +29,7 @@ let rates = {
 let gacha = new GachaJS(rates);
 
 // Defining pull information based on rarity
-const pullInfo = [
+let pullInfo = [
   { rarity: 'c', wordLength: 3, score: 3 },
   { rarity: 'r', wordLength: 5, score: 5 },
   { rarity: 'sr', wordLength: 7, score: 7 },
@@ -37,7 +39,7 @@ const pullInfo = [
 // Start game function
 function startGame() {
   timeLeft = 30 + timeAdded;
-  updateUITimeLeft();
+  updateUITimeLeft(timeLeft);
   document.getElementById('start-button').disabled = true;
   document.getElementById('gacha-ball').innerText = 'Space to pull the gachapon!';
   document.addEventListener('keydown', keyDown);
@@ -47,82 +49,89 @@ function startGame() {
   }, 1000);
 }
 
-// Update UI with current time left
-function updateUITimeLeft() {
-  document.getElementById('time-left').innerText = timeLeft;
-}
-
 // Update time left and end game if time runs out
 function updateTimeLeft(countdown) {
   timeLeft--;
-  updateUITimeLeft();
+  updateUITimeLeft(timeLeft);
   if (timeLeft <= 0) {
     clearInterval(countdown);
     endGame();
   }
 }
 
-// Get dictionary information based on the gacha pull
-function getDictionaryInfo(property) {
-  let result = pullInfo.find(info => info.rarity === varGachaPull);
-  return result[property];
+// End game logic
+function endGame() {
+  document.removeEventListener('keydown', keyDown);
+  document.getElementById('gacha-ball').innerHTML = 'Well done! Check your score below.';
+  highscores.push(score);
+  document.getElementById('highscores').innerHTML = highscores.map(score => `<li>Score: ${score}</li>`).join('');
+  coins += Math.floor(score / 2);
+  score = 0;
+  updateUICoins(coins);
+  clearTypedWord();
+  document.getElementById('start-button').disabled = false;
 }
 
-// Generate a word based on the wordMax length
-function generateWord(wordMax) {
-  const possibleConsonants = 'bcdfghjklmnpqrstvwxyz';
-  const possibleVowels = 'aeiou';
-  let text = '';
-
-  for (let i = 0; i < wordMax; i += 3) {
-    text += possibleConsonants[Math.floor(Math.random() * possibleConsonants.length)];
-    text += possibleVowels[Math.floor(Math.random() * possibleVowels.length)];
-    text += possibleConsonants[Math.floor(Math.random() * possibleConsonants.length)];
+function keyDown (event) {
+  /*
+  helper function so eventListeners can be 
+  turned on or off easily.
+  Handles what happpens on valid keydown events
+  */
+  if (event.key === " ") {
+    if (sequence.length !== 0){
+      sequence = [];
+      clearTypedWord();
+    }
+    gachaPull();
+    return;
   }
-
-  return text;
+  if (event.code === "Enter") {
+    score += submitWord(word, sequence, varGachaPull, pullInfo);
+    sequence = [];
+    return;
+  }
+  if (event.key === "Backspace") {
+    if (sequence.length !== 0) { sequence.pop(); }
+    document.getElementById('typed-word').innerText = sequence.join("");
+    return;
+  }
+  if (event.key === "Delete") {
+    document.getElementById('gacha-ball').innerText = `Entire Sequence Cleared! \n Word: ${word}`;
+    sequence = [];
+    clearTypedWord();
+    return;
+  }
+  const pressedKey = event.key.toLowerCase();
+  if (/[a-z]/.test(pressedKey)) {
+    sequence.push(pressedKey);
+    let typedWord = sequence.join("");
+    document.getElementById('typed-word').innerText = typedWord;
+    if (typedWord.length === word.length) {
+      score += submitWord(word, sequence, varGachaPull, pullInfo);
+      sequence = [];
+      return;
+    }
+    return;
+  }
+  document.getElementById('gacha-ball').innerText = `Invalid! \nWord: ${word}`;
 }
 
 // Handle gacha pull
 function gachaPull() {
   varGachaPull = gacha.getPullByRarity();
-  score += getDictionaryInfo('score');
-  word = generateWord(getDictionaryInfo('wordLength'));
-  updateGachaBall();
-}
-
-// Update gacha ball with current word and rarity
-function updateGachaBall() {
+  console.log('Gacha Pull');
+  console.table(pullInfo);
+  word = generateWord(getDictionaryInfo('wordLength',varGachaPull, pullInfo));
   document.getElementById('gacha-ball').innerText = `Rarity: ${varGachaPull}, \nWord: ${word}`;
 }
 
-// End game logic
-function endGame() {
-  document.removeEventListener('keydown', keyDown);
-  highscores.push(score);
-  updateHighscores();
-  coins += Math.floor(score / 2);
-  score = 0;
-  updateUICoins();
-  document.getElementById('typed-word').innerText = " ";
-  document.getElementById('start-button').disabled = false;
-}
+//-------------------------------Shop:------------------------------------
 
-// Update highscores in the UI
-function updateHighscores() {
-  document.getElementById('highscores').innerHTML = highscores.map(score => `<li>Score: ${score}</li>`).join('');
-}
-
-// Update coins in the UI
-function updateUICoins() {
-  document.getElementById('coins').innerText = coins;
-}
-
-// Buy chance logic
 function buyChance() {
   if (coins >= 10) {
     coins -= 10;
-    updateUICoins();
+    updateUICoins(coins);
     if (rates.c === 0 && rates.r === 0 && rates.sr === 0) {
       document.getElementById('buy-speed').disabled = true;
     } else {
@@ -172,14 +181,12 @@ function adjustGachaRates() {
     }
 }
 
-
-// Buy speed logic
-function buySpeed() {
+function buyTime() {
   if (coins >= 20) {
     coins -= 20;
     timeAdded += 10;
-    updateUICoins();
-    updateUITimeLeft();
+    updateUICoins(coins);
+    updateUITimeLeft(timeLeft+timeAdded);
   }
 }
 
@@ -187,34 +194,18 @@ function buySpeed() {
 function reduceWordLength() {
   if (coins >= 40) {
     coins -= 40;
-    updateUICoins();
+    updateUICoins(coins)
+    console.table(pullInfo);
     pullInfo.forEach((item) => {
-      if (item.wordLength !== 1) { item.wordLength -= 1; }
+      if (item.wordLength > 1) { item.wordLength -= 1; console.log(item.wordLength); }
     });
+    console.table(pullInfo);
   }
+  console.table(pullInfo);
 }
-
-// Submit word logic
-function submitWord() {
-  let typedWord = sequence.join("");
-  if (typedWord === word) {
-    document.getElementById('gacha-ball').innerText = "Word matched! Press space for new word";
-    score += getDictionaryInfo('score');
-  } else {
-    document.getElementById('gacha-ball').innerText = `Incorrect word! Try again \nWord: ${word}`;
-  }
-  sequence.length = 0;
-  document.getElementById('typed-word').innerText = " ";
-}
-
-
-
-
-// Event listener for keydown events
-
-
+console.table(pullInfo);
 // Event listeners for UI buttons
 document.getElementById('start-button').addEventListener('click', startGame);
-document.getElementById('buy-chance').addEventListener('click', buyChance);
-document.getElementById('buy-speed').addEventListener('click', buySpeed);
+//document.getElementById('buy-chance').addEventListener('click', buyChance);
+document.getElementById('buy-speed').addEventListener('click', buyTime);
 document.getElementById('reduce-word').addEventListener('click', reduceWordLength);
