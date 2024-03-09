@@ -1,6 +1,6 @@
 // Importing required libraries and modules
 const GachaJS = require('gacha-js');
-
+import { keyDown } from 'utils.js';
 // Global variables initialization
 let timeLeft = 30;
 let timeAdded = 0;
@@ -37,11 +37,10 @@ const pullInfo = [
 // Start game function
 function startGame() {
   timeLeft = 30 + timeAdded;
-  score = 0;
   updateUITimeLeft();
   document.getElementById('start-button').disabled = true;
   document.getElementById('gacha-ball').innerText = 'Space to pull the gachapon!';
-
+  document.addEventListener('keydown', keyDown);
   // Countdown timer
   let countdown = setInterval(() => {
     updateTimeLeft(countdown);
@@ -99,11 +98,13 @@ function updateGachaBall() {
 
 // End game logic
 function endGame() {
+  document.removeEventListener('keydown', keyDown);
   highscores.push(score);
   updateHighscores();
   coins += Math.floor(score / 2);
   score = 0;
   updateUICoins();
+  document.getElementById('typed-word').innerText = " ";
   document.getElementById('start-button').disabled = false;
 }
 
@@ -147,16 +148,16 @@ function adjustGachaRates() {
         }
         gacha =  new GachaJS(rates);
         console.table(gacha);
-    }else if (rates.r !== 0) {
+    }else if (rates.r > 0) {
         // minus r chance and distribute to other rarities
         console.log(rates.r);
         rates.r -= 3;
         console.log(rates.r);
         console.log(rates.sr);
-        rates.sr += 2;
+        rates.sr += 2.5;
         console.log(rates.sr);
         console.log(rates.ssr);
-        rates.ssr += 1.0;
+        rates.ssr += 0.5;
         console.log(rates.ssr);
         console.table(`second if: ${rates}`);
         gacha =  new GachaJS(rates);
@@ -206,40 +207,11 @@ function submitWord() {
   document.getElementById('typed-word').innerText = " ";
 }
 
+
+
+
 // Event listener for keydown events
-document.addEventListener('keydown', function (event) {
-  if (event.key === " ") {
-    gachaPull();
-    return;
-  }
-  if (event.code === "Enter") {
-    submitWord();
-    return;
-  }
-  if (event.key === "Backspace") {
-    if (sequence.length !== 0) { sequence.pop(); }
-    document.getElementById('typed-word').innerText = sequence.join("");
-    return;
-  }
-  if (event.key === "Delete") {
-    document.getElementById('gacha-ball').innerText = `Entire Sequence Cleared! \n Word: ${word}`;
-    sequence.length = 0;
-    document.getElementById('typed-word').innerText = " ";
-    return;
-  }
-  const pressedKey = event.key.toLowerCase();
-  if (/[a-z]/.test(pressedKey)) {
-    sequence.push(pressedKey);
-    let typedWord = sequence.join("");
-    document.getElementById('typed-word').innerText = typedWord;
-    if (typedWord.length === word.length) {
-      submitWord();
-      return;
-    }
-    return;
-  }
-  document.getElementById('gacha-ball').innerText = `Invalid! \nWord: ${word}`;
-});
+
 
 // Event listeners for UI buttons
 document.getElementById('start-button').addEventListener('click', startGame);
