@@ -26,8 +26,8 @@ let varGachaPull;
 /**
  * Initalize UI
  */
-updateUICoins(coins);
-updateUITimeLeft(timeLeft);
+updateUICoins(coins); //see utils.js
+updateUITimeLeft(timeLeft); //see utils.js
 
 /**
  * Initialize Gacha pulls and information
@@ -82,8 +82,8 @@ function endGame() {
   document.getElementById('highscores').innerHTML = highscores.map(score => `<li>Score: ${score}</li>`).join('');
   coins += Math.floor(score / 2);
   score = 0;
-  updateUICoins(coins);
-  clearTypedWord();
+  updateUICoins(coins); //see utils.js
+  clearTypedWord(); //see utils.js
   document.getElementById('start-button').disabled = false;
 }
 
@@ -135,7 +135,7 @@ function keyDown (event) {
 // Handle gacha pull
 function gachaPull() {
   varGachaPull = gacha.getPullByRarity();
-  word = generateWord(getDictionaryInfo('wordLength',varGachaPull, pullInfo));
+  word = generateWord(getDictionaryInfo('wordLength',varGachaPull, pullInfo)); //see utils.js
   document.getElementById('gacha-ball').innerText = `Rarity: ${varGachaPull}, \nWord: ${word}`;
 }
 
