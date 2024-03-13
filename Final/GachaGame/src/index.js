@@ -1,8 +1,18 @@
-// Importing required libraries and modules
+/**
+ * Code by Amandaleeanne. 
+ * External Libraries not made by me: gacha-js
+ * Programming paradigm: Procedural programming
+ * some functional programming as well.
+ */
+/**
+ *  Importing required libraries and modules
+ */
 const GachaJS = require('gacha-js');
 import { updateUICoins, generateWord, updateUITimeLeft, getDictionaryInfo, submitWord, clearTypedWord } from './utils.js';
-//import {  } from './shop.js';
-// Global variables initialization
+/**
+ * Global variables initialization
+ */
+
 let timeLeft = 30;
 let timeAdded = 0;
 let coins = 0;
@@ -13,11 +23,15 @@ let word;
 let sequence = [];
 let varGachaPull;
 
-// Updating UI with initial values
+/**
+ * Initalize UI
+ */
 updateUICoins(coins);
 updateUITimeLeft(timeLeft);
 
-// Gacha rates configuration
+/**
+ * Initialize Gacha pulls and information
+ */
 let rates = {
   ssr: 5.9,
   sr: 10.8,
@@ -25,10 +39,8 @@ let rates = {
   c: 66,
 };
 
-// Creating a Gacha instance
 let gacha = new GachaJS(rates);
 
-// Defining pull information based on rarity
 let pullInfo = [
   { rarity: 'c', wordLength: 3, score: 3 },
   { rarity: 'r', wordLength: 5, score: 5 },
@@ -36,8 +48,11 @@ let pullInfo = [
   { rarity: 'ssr', wordLength: 10, score: 15 }
 ];
 
-// Start game function
+/**
+ * Start game, and handle nessesary events 
+ */
 function startGame() {
+  //reset time and take into account bought time(timeAdded).
   timeLeft = 30 + timeAdded;
   updateUITimeLeft(timeLeft);
   document.getElementById('start-button').disabled = true;
@@ -120,73 +135,20 @@ function keyDown (event) {
 // Handle gacha pull
 function gachaPull() {
   varGachaPull = gacha.getPullByRarity();
-  console.log('Gacha Pull');
-  console.table(pullInfo);
   word = generateWord(getDictionaryInfo('wordLength',varGachaPull, pullInfo));
   document.getElementById('gacha-ball').innerText = `Rarity: ${varGachaPull}, \nWord: ${word}`;
 }
 
 //-------------------------------Shop:------------------------------------
-
-function buyChance() {
-  if (coins >= 10) {
-    coins -= 10;
-    updateUICoins(coins);
-    if (rates.c === 0 && rates.r === 0 && rates.sr === 0) {
-      document.getElementById('buy-speed').disabled = true;
-    } else {
-      adjustGachaRates();
-    }
-  }
-}
-
-// Adjust gacha rates based on buying chance
-function adjustGachaRates() {
-    if (rates.c > 0) {
-        // minus c chance and distribute the minus to other rarities 
-        //For example: c chance -12, 10/4 all other rarities go up by 4
-        rates.c -= 5;
-        rates.r += 3;
-        rates.sr += 1.5;
-        rates.ssr += 0.5;
-        console.table(`first if: ${rates}`);
-        if (rates.c === 1) {
-          rates.c = 0;
-          rates.r += 1;
-          gacha =  new GachaJS(rates);
-        }
-        gacha =  new GachaJS(rates);
-        console.table(gacha);
-    }else if (rates.r > 0) {
-        // minus r chance and distribute to other rarities
-        console.log(rates.r);
-        rates.r -= 3;
-        console.log(rates.r);
-        console.log(rates.sr);
-        rates.sr += 2.5;
-        console.log(rates.sr);
-        console.log(rates.ssr);
-        rates.ssr += 0.5;
-        console.log(rates.ssr);
-        console.table(`second if: ${rates}`);
-        gacha =  new GachaJS(rates);
-        console.table(gacha);
-    }else{
-      // minus sr chance and distribute to other rarities
-      rates.sr -= 3;
-      rates.ssr += 3;
-      console.table(`last if: ${rates}`);
-      gacha =  new GachaJS(rates);
-      console.table(gacha);
-    }
-}
+//Note: even though this handles a diiferet thing than the rest of the script,
+//since its such a small part of the game, it is not put into its own script.
 
 function buyTime() {
   if (coins >= 20) {
     coins -= 20;
     timeAdded += 10;
     updateUICoins(coins);
-    updateUITimeLeft(timeLeft+timeAdded);
+    updateUITimeLeft(30+timeAdded);
   }
 }
 
@@ -195,15 +157,11 @@ function reduceWordLength() {
   if (coins >= 40) {
     coins -= 40;
     updateUICoins(coins)
-    console.table(pullInfo);
     pullInfo.forEach((item) => {
       if (item.wordLength > 1) { item.wordLength -= 1; console.log(item.wordLength); }
     });
-    console.table(pullInfo);
   }
-  console.table(pullInfo);
 }
-console.table(pullInfo);
 // Event listeners for UI buttons
 document.getElementById('start-button').addEventListener('click', startGame);
 //document.getElementById('buy-chance').addEventListener('click', buyChance);
